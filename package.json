@@ -1,0 +1,8 @@
+{
+	"name": "StockExchangeBackend",
+	"main": "server.js",
+	"dependencies": {
+		"express": "latest",
+		"mysql": "latest"
+	}
+}
