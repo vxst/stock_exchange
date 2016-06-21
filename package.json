@@ -3,6 +3,7 @@
 	"main": "server.js",
 	"dependencies": {
 		"express": "latest",
-		"mysql": "latest"
+		"mysql": "latest",
+		"express-session": "latest"
 	}
 }
