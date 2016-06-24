@@ -3,10 +3,31 @@ var exchange = require("exchange");
 var info = require("info");
 var management = require("management");
 var user = require("user");
+var bodyParser = require('body-parser')
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	  extended: true
+}));
+app.use(function(request, response, next){
+	response.ok = function(){
+		response.json({'status':'ok'});
+	}
+	response.fail = function(){
+		response.json({'status':'fail'});
+	}
+	next();
+});
+app.use(session({
+	secret: 'Sah1ainaooL9bi0N',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { secure: true }
+}))
 
 app.post('/user_login', user.login);
 app.post('/user_logout', user.logout);
-app.post('/user_password_change', user.password);
+app.post('/user_password_change', user.change_password);
 
 app.post('/account_put', account.stock_change);
 app.get('/account_delete', account.stock_remove);
