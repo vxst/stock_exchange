@@ -1,9 +1,7 @@
-var account = require("account");
-var exchange = require("exchange");
-var info = require("info");
-var management = require("management");
-var user = require("user");
 var bodyParser = require('body-parser')
+var express = require('express');
+var app = express();
+var session = require('express-session');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -16,6 +14,9 @@ app.use(function(request, response, next){
 	response.fail = function(){
 		response.json({'status':'fail'});
 	}
+	response.ok_with_data = function(data){
+		response.json({'status':'ok', 'data':data});
+	}
 	next();
 });
 app.use(session({
@@ -25,14 +26,23 @@ app.use(session({
 	cookie: { secure: true }
 }))
 
+var account = require("./account");
+var exchange = require("./exchange");
+var info = require("./info");
+var management = require("./management");
+var user = require("./user");
+
 app.post('/user_login', user.login);
 app.post('/user_logout', user.logout);
 app.post('/user_password_change', user.change_password);
 
-app.post('/account_put', account.stock_change);
-app.get('/account_delete', account.stock_remove);
-app.post('/money_account_put', account.money_put);
-app.get('/money_account_delete', account.money_delete);
+app.get('/account_put', account.get_stock_account);
+app.post('/account_put', account.put_stock_account);
+app.post('/account_delete', account.remove_stock_account);
+
+app.get('/money_account_get', account.get_money_account);
+app.post('/money_account_put', account.put_money_account);
+app.get('/money_account_delete', account.delete_money_account);
 
 app.get('/order_list', exchange.list_order);
 app.post('/order_new', exchange.new_order);

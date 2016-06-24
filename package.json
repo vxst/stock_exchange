@@ -1,9 +1,19 @@
 {
-	"name": "StockExchangeBackend",
-	"main": "server.js",
-	"dependencies": {
-		"express": "latest",
-		"mysql": "latest",
-		"express-session": "latest"
-	}
+  "name": "StockExchangeBackend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "description": "A project for SE class in ZJU",
+  "license": "UNLICENSED, PRIVATE",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vxst/stock_exchange.git"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.6",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "express-session": "^1.13.0",
+    "mysql": "^2.11.1"
+  }
 }
