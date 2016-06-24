@@ -134,3 +134,130 @@ exports.remove_stock_account = function(request, response){
 		}
 	]);
 }
+
+exports.put_money_account = function(request, response){
+	var user_id = request.body.user_id;
+	var stock_account_id = request.body.stock_account_id;
+	var password = password_encode(request.body.password);
+	var money = request.body.money;
+
+	if(!request.session.is_admin){
+		response.fail();
+		return;
+	}
+
+	if(user_id === null){
+		async.waterfall([
+			function(callback){
+				database.get_connection(callback);
+			},
+			function(connection, callback){
+				connection.query("INSERT INTO users_money (stock_account_id, password, money) VALUES(?, ?, ?)", [stock_account_id, password, money],
+					function(error, results){
+						connection.release();
+						if(error || results.affectedRows != 1){
+							response.fail();
+						}else{
+							response.ok();
+						}
+						callback(null);
+					}
+				);
+			}
+		]);
+	}else if(request.body.password == null){
+		async.waterfall([
+			function(callback){
+				database.get_connection(callback);
+			},
+			function(connection, callback){
+				connection.query("UPDATE users_money SET stock_account_id=?,money=? WHERE id=?",[stock_account_id, money, user_id],
+					function(error, result){
+						connection.release();
+						if(error || result.affectedRows != 1){
+							response.fail();
+						}else{
+							response.ok();
+						}
+						callback(null);
+					}
+				);
+			}
+		]);
+	}else{
+		async.waterfall([
+			function(callback){
+				database.get_connection(callback);
+			},
+			function(connection, callback){
+				connection.query("UPDATE users_money SET stock_account_id=?,money=?,password=? WHERE id=?",[stock_account_id, money, password, user_id],
+					function(error, result){
+						connection.release();
+						if(error || result.affectedRows != 1){
+							response.fail();
+						}else{
+							response.ok();
+						}
+						callback(null);
+					}
+				);
+			}
+		]);
+	}
+}
+
+exports.get_money_account = function(request, response){
+	var user_id = request.query.user_id;
+
+	if(!request.session.is_admin){
+		response.fail();
+		return;
+	}
+
+	async.waterfall([
+		function(callback){
+			database.get_connection(callback);
+		},
+		function(connection, callback){
+			connection.query("SELECT stock_account_id, money FROM users_money WHERE id = ?", [user_id], 
+				function(error, result){
+					connection.release();
+					if(error || result.length != 1){
+						response.fail();
+					}else{
+						response.ok();
+					}
+					callback(null);
+				}
+			);
+		}
+	]);
+}
+
+exports.remove_money_account = function(request, response){
+	var user_id = request.query.user_id;
+
+	if(!request.session.is_admin){
+		response.fail();
+		return;
+	}
+
+	async.waterfall([
+		function(callback){
+			database.get_connection(callback);
+		},
+		function(connection, callback){
+			connection.query("DELETE FROM users_money WHERE id = ?", [user_id], 
+				function(error, result){
+					connection.release();
+					if(error || result.affectedRows != 1){
+						response.fail();
+					}else{
+						response.ok();
+					}
+					callback(null);
+				}
+			);
+		}
+	]);
+}
