@@ -32,17 +32,21 @@ var info = require("./info");
 var management = require("./management");
 var user = require("./user");
 
-app.post('/user_login', user.login);
-app.post('/user_logout', user.logout);
-app.post('/user_password_change', user.change_password);
+app.post('/user/login', user.login);
+app.post('/user/logout', user.logout);
+app.post('/user/password_change', user.change_password);
 
-app.get('/account_put', account.get_stock_account);
-app.post('/account_put', account.put_stock_account);
-app.post('/account_delete', account.remove_stock_account);
+app.get('/stock_account', account.get_stock_account);
+app.put('/stock_account', account.put_stock_account);
+app.post('/stock_account', account.put_stock_account);
+app.del('/stock_account', account.remove_stock_account);
+app.post('/stock_account_del', account.remove_stock_account);
 
-app.get('/money_account_get', account.get_money_account);
-app.post('/money_account_put', account.put_money_account);
-app.get('/money_account_delete', account.delete_money_account);
+app.get('/money_account', account.get_money_account);
+app.put('/money_account', account.put_money_account);
+app.post('/money_account', account.put_money_account);
+app.del('/money_account', account.remove_money_account);
+app.post('/money_account_del', account.remove_money_account);
 
 app.get('/order_list', exchange.list_order);
 app.post('/order_new', exchange.new_order);
