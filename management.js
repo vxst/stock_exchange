@@ -57,7 +57,7 @@ exports.edit_stock = function(request, response){
 	]);
 }
 
-exports.turn_stock = function(request, response_{
+exports.turn_stock = function(request, response){
 	if(request.session.is_admin !== true){
 		response.fail();
 		return;

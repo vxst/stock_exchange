@@ -47,22 +47,22 @@ app.post('/user/password_change', user.change_password);
 app.get('/stock_account', account.get_stock_account);
 app.put('/stock_account', account.put_stock_account);
 app.post('/stock_account', account.put_stock_account);
-app.del('/stock_account', account.remove_stock_account);
+app.delete('/stock_account', account.remove_stock_account);
 app.post('/stock_account_del', account.remove_stock_account);
 
 app.get('/money_account', account.get_money_account);
 app.put('/money_account', account.put_money_account);
 app.post('/money_account', account.put_money_account);
-app.del('/money_account', account.remove_money_account);
+app.delete('/money_account', account.remove_money_account);
 app.post('/money_account_del', account.remove_money_account);
 
 app.get('/orders', exchange.get_orders);
 app.post('/order_new', exchange.new_order);
 app.get('/order_remove', exchange.remove_order);
-app.del('/order', exchange.remove_order);
+app.delete('/order', exchange.remove_order);
 app.get('/stock', exchange.get_stocks);
 
-app.get('/stock_info', info.stock);
+app.get('/stock_info', info.stock_info);
 app.get('/stock_search', info.search_stock);
 app.get('/stock_history', info.stock_history);
 
