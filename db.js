@@ -21,10 +21,13 @@ exports.init_database = function(){
 					connection.query("CREATE TABLE IF NOT EXISTS stock(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(32), current_price DOUBLE)", callback);
 				},
 				function(callback){
-					connection.query("CREATE TABLE IF NOT EXISTS active_orders(id INT PRIMARY KEY AUTO_INCREMENT, users_id INT, stock_id INT, direction BOOLEAN, price DOUBLE, amount INT)", callback);
+					connection.query("CREATE TABLE IF NOT EXISTS active_orders(id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, stock_id INT, direction BOOLEAN, price DOUBLE, amount INT)", callback);
 				},
 				function(callback){
 					connection.query("CREATE TABLE IF NOT EXISTS history_orders(id INT PRIMARY KEY AUTO_INCREMENT, stock_id INT, sell_user_id INT, buy_user_id INT, price DOUBLE, amount INT)", callback);
+				},
+				function(callback){
+					connection.query("CREATE TABLE IF NOT EXISTS stock_holding(id INT PRIMARY KEY AUTO_INCREMENT, user_id INT, stock_id INT, amount INT)", callback);
 				},
 				function(callback){
 					connection.release();

@@ -14,6 +14,14 @@ app.use(function(request, response, next){
 	response.fail = function(){
 		response.json({'status':'fail'});
 	}
+	response.fail_with_message = function(message){
+		response.json({'status':'fail', 'message': message});
+	}
+	response.assert = function(){
+		console.log("ASSERT SITUATION HAPPENED, Database INCONSISTENT, Program UNSTABLE");
+		console.trace();
+		response.json({'status':'critical system fail'});
+	}
 	response.ok_with_data = function(data){
 		response.json({'status':'ok', 'data':data});
 	}
@@ -48,9 +56,10 @@ app.post('/money_account', account.put_money_account);
 app.del('/money_account', account.remove_money_account);
 app.post('/money_account_del', account.remove_money_account);
 
-app.get('/order_list', exchange.list_order);
+app.get('/orders', exchange.get_orders);
 app.post('/order_new', exchange.new_order);
 app.get('/order_remove', exchange.remove_order);
+app.del('/order', exchange.remove_order);
 
 app.get('/account_status', exchange.account_status);
 
