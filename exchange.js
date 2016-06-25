@@ -22,6 +22,28 @@ exports.get_orders = function(request, response){
 	]);
 }
 
+exports.get_stocks = function(request, response){
+	var user_id = request.session.user_id;
+	async.waterfall(
+	[
+		function(callback){
+			database.get_connection(callback);
+		},
+		function(connection, callback){
+			connection.query("SELECT stock_id, stock.name AS stock_name, amount FROM stock_holding JOIN stock ON stock.id = stock_id WHERE user_id = ?", [user_id], 
+				function(error, result){
+					connection.release();
+					if(error)
+						response.fail();
+					else
+						response.ok_with_data(result);
+					callback(null);
+				}
+			);
+		}
+	]);
+}
+
 exports.new_order = function(request, response){
 	var user_id = request.session.user_id;
 	var stock_id = request.body.stock_id;

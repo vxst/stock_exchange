@@ -61,7 +61,7 @@ app.post('/order_new', exchange.new_order);
 app.get('/order_remove', exchange.remove_order);
 app.del('/order', exchange.remove_order);
 
-app.get('/account_status', exchange.account_status);
+app.get('/stock', exchange.get_stocks);
 
 app.get('/stat', info.stat);
 app.get('/stock_info', info.stock);
