@@ -66,6 +66,24 @@ exports.new_order = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
+			connection.query("SELECT base_price, max_change FROM stock WHERE id = ? AND active = TRUE", [stock_id],
+				function(error, result){
+					if(error || result.length != 1){
+						connection.release();
+						callback("No such active stock");
+						return;
+					}
+					var max_price = result[0].base_price * (1.0+max_change);
+					var min_price = result[0].base_price * (1.0-max_change);
+					if(price > max_price || price < min_price){
+						connection.release();
+						callback("Price over range");
+						return;
+					}
+					callback(null, connection);
+				});
+		},
+		function(connection, callback){
 			if(buy_in_order)
 				connection.query("SELECT money FROM users_money WHERE stock_account_id = ?", [user_id], function(error, result){
 					if(result.length < 1 || result[0].money < money){

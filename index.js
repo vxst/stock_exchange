@@ -60,12 +60,12 @@ app.get('/orders', exchange.get_orders);
 app.post('/order_new', exchange.new_order);
 app.get('/order_remove', exchange.remove_order);
 app.del('/order', exchange.remove_order);
-
 app.get('/stock', exchange.get_stocks);
 
-app.get('/stat', info.stat);
 app.get('/stock_info', info.stock);
-app.get('/history', info.stock_history);
+app.get('/stock_search', info.search_stock);
+app.get('/stock_history', info.stock_history);
 
-app.get('/add_stock', management.add_stock);
-app.get('/set_stock', management.set_stock);//Stop and start
+app.post('/add_stock', management.add_stock);
+app.post('/edit_stock', management.edit_stock);//Stop and start
+app.post('/turn_stock', management.turn_stock);
