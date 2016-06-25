@@ -14,7 +14,7 @@ exports.login = function(request, response){
 
 	database.get_counection(
 		function(error, connection){
-			connection.query("SELECT id, is_admin FROM users WHERE username=? AND password=?",
+			connection.query("SELECT id, is_admin FROM user WHERE username=? AND password=?",
 				[username, password], 
 				function(error, result, fields){
 					connection.release();
@@ -44,7 +44,7 @@ exports.change_password = function(request, response){
 
 	database.get_counection(
 		function(error, connection){
-			connection.query("UPDATE users SET password = ? WHERE id = ? AND password = ?",
+			connection.query("UPDATE user SET password = ? WHERE id = ? AND password = ?",
 				[new_password, user_id, old_password],
 				function(error, result, fields){
 					connection.release();

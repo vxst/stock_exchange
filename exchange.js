@@ -85,7 +85,7 @@ exports.new_order = function(request, response){
 		},
 		function(connection, callback){
 			if(buy_in_order)
-				connection.query("SELECT money FROM users_money WHERE stock_account_id = ?", [user_id], function(error, result){
+				connection.query("SELECT money FROM user_money WHERE stock_account_id = ?", [user_id], function(error, result){
 					if(result.length < 1 || result[0].money < money){
 						connection.release();
 						callback("Not enough money");
@@ -105,7 +105,7 @@ exports.new_order = function(request, response){
 		},
 		function(connection, data, callback){
 			if(buy_in_order){
-				connection.query("UPDATE users_money SET money = ? WHERE stock_account_id = ?", [data - money, user_id], function(error, result){
+				connection.query("UPDATE user_money SET money = ? WHERE stock_account_id = ?", [data - money, user_id], function(error, result){
 					if(error || result.affectedRows != 1){
 						response.assert();
 						return;
@@ -170,7 +170,7 @@ exports.remove_order = function(request, response){
 				return;
 			}
 			if(buy_in_order){
-				connection.query("SELECT money FROM users_money WHERE stock_account_id = ?", user_id, function(error, result){
+				connection.query("SELECT money FROM user_money WHERE stock_account_id = ?", user_id, function(error, result){
 					if(error || result.length < 1){
 						connection.release();
 						callback("No money account?");
@@ -198,7 +198,7 @@ exports.remove_order = function(request, response){
 				return;
 			}
 			if(buy_in_order){
-				connection.query("UPDATE users_money SET money = ? WHERE stock_account_id = ?", [data + amount * price], function(error, result){
+				connection.query("UPDATE user_money SET money = ? WHERE stock_account_id = ?", [data + amount * price], function(error, result){
 					if(error || result.affectedRows < 1){
 						response.assert();
 						return;
