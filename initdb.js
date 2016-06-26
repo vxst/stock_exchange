@@ -12,6 +12,7 @@ function init_database(){
 							username VARCHAR(32),
 							name VARCHAR(32),
 							password CHAR(36),
+							sex VARCHAR(12),
 							create_time TIMESTAMP DEFAULT NOW(),
 							national_id VARCHAR(32),
 							address VARCHAR(255),
