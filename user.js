@@ -44,7 +44,7 @@ exports.logout = function(request, response){
 exports.change_password = function(request, response){
 	var old_password = password_encode(request.body.old_password);
 	var new_password = password_encode(request.body.new_password);
-	var user_id = request.user_id;
+	var user_id = request.session.user_id;
 
 	database.get_connection(
 		function(error, connection){
@@ -57,6 +57,27 @@ exports.change_password = function(request, response){
 					}else{
 						response.fail();
 					}
+				}
+			);
+		}
+	);
+}
+
+exports.info = (request, response)=>{
+	let user_id = request.session.user_id;
+
+	if(user_id === null){
+		response.fail();
+		return;
+	}
+
+	database.get_connection(
+		function(error, connection){
+			connection.query("SELECT username, is_admin FROM user WHERE id=?",
+				[user_id],
+				(error, result)=>{
+					connection.release();
+					response.ok_with_data(result[0]);
 				}
 			);
 		}

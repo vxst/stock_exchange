@@ -31,8 +31,7 @@ app.use(function(request, response, next){
 app.use(session({
 	secret: 'Sah1ainaooL9bi0N',
 	resave: false,
-	saveUninitialized: true,
-	cookie: { secure: true }
+	saveUninitialized: true
 }))
 
 var account = require("./account");
@@ -43,6 +42,7 @@ var user = require("./user");
 
 app.post('/user/login', user.login);
 app.post('/user/logout', user.logout);
+app.get('/user/info', user.info);
 app.post('/user/password_change', user.change_password);
 
 app.get('/stock_account', account.get_stock_account);
