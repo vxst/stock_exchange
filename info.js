@@ -29,7 +29,7 @@ exports.stock_info = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query("SELECT id, name, base_price, max_change FROM stock WHERE id = ?", [stock_id],
+			connection.query("SELECT id, name, base_price, max_change, active FROM stock WHERE id = ?", [stock_id],
 				function(error, results){
 					if(error || results.length != 1){
 						connection.release();
