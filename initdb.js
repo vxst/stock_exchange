@@ -18,7 +18,7 @@ function init_database(){
 							address VARCHAR(255),
 							work VARCHAR(32),
 							education VARCHAR(32),
-							work_phone VARCHAR(32),
+							phone VARCHAR(32),
 							is_admin BOOLEAN,
 							UNIQUE INDEX(username)
 						)`, callback);
