@@ -5,7 +5,7 @@ var crypto = require('crypto');
 
 // Password->20 char encoded password, 80 bits with 16 bits salt
 exports.password_encode = function(password){
-	var salt = crypto.randomBytes(2).toString('hex')
+	var salt = 'a1d4';
 	var encoded = crypto.pbkdf2Sync(password, salt, 120, 16, 'sha256').toString('hex');
 	return encoded + salt;
 }
