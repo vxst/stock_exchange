@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var session = require('express-session');
 
+app.set('trust proxy', 1);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	  extended: true
@@ -69,3 +70,7 @@ app.get('/stock_history', info.stock_history);
 app.post('/add_stock', management.add_stock);
 app.post('/edit_stock', management.edit_stock);//Stop and start
 app.post('/turn_stock', management.turn_stock);
+
+app.listen(3000, function () {
+	console.log('App Started On Port 3000!');
+});
