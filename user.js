@@ -16,7 +16,7 @@ exports.login = function(request, response){
 	var username = request.body.username;
 	var password = password_encode(request.body.password);
 
-	database.get_counection(
+	database.get_connection(
 		function(error, connection){
 			connection.query("SELECT id, is_admin FROM user WHERE username=? AND password=?",
 				[username, password], 
@@ -46,7 +46,7 @@ exports.change_password = function(request, response){
 	var new_password = password_encode(request.body.new_password);
 	var user_id = request.user_id;
 
-	database.get_counection(
+	database.get_connection(
 		function(error, connection){
 			connection.query("UPDATE user SET password = ? WHERE id = ? AND password = ?",
 				[new_password, user_id, old_password],
