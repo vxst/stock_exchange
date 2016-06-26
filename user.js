@@ -1,3 +1,5 @@
+"use strict";
+
 var database = require("./db");
 var crypto = require('crypto');
 
