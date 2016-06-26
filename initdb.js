@@ -11,7 +11,7 @@ function init_database(){
 							id INT PRIMARY KEY AUTO_INCREMENT,
 							username VARCHAR(32),
 							name VARCHAR(32),
-							password CHAR(20),
+							password CHAR(36),
 							create_time TIMESTAMP DEFAULT NOW(),
 							national_id VARCHAR(32),
 							address VARCHAR(255),
@@ -27,7 +27,7 @@ function init_database(){
 						user_money(
 							id INT PRIMARY KEY AUTO_INCREMENT,
 							stock_account_id INT,
-							password CHAR(20),
+							password CHAR(36),
 							money DOUBLE,
 							UNIQUE INDEX(stock_account_id),
 							FOREIGN KEY(stock_account_id)
