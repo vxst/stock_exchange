@@ -84,10 +84,10 @@ function init_database(){
 							FOREIGN KEY(stock_id)
 								REFERENCES stock(id)
 								ON DELETE CASCADE,
-							FOREIGN KEY(sell_user_id),
+							FOREIGN KEY(sell_user_id)
 								REFERENCES user(id)
 								ON DELETE SET NULL,
-							FOREIGN KEY(buy_user_id),
+							FOREIGN KEY(buy_user_id)
 								REFERENCES user(id)
 								ON DELETE SET NULL
 						)`, callback);
@@ -113,7 +113,12 @@ function init_database(){
 					connection.release();
 					callback(null);
 				}
-			]);
+			],
+			function(error){
+				if(error){
+					console.log(error);
+				}
+			});
 		}
 	);
 }
