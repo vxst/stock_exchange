@@ -87,9 +87,13 @@ exports.put_stock_account = function(request, response){
 }
 
 exports.get_stock_account = function(request, response){
-	var target_user_id = request.query.user_id;
+	let target_user_id = null;
 
-	if(!request.session.is_admin){
+	if(request.session.is_admin && request.query.user_id !== undefined){
+		target_user_id = request.query.user_id;
+	}else if(request.session.user_id !== undefined){
+		target_user_id = request.session.user_id;
+	}else{
 		response.fail();
 		return;
 	}
@@ -208,9 +212,13 @@ exports.put_money_account = function(request, response){
 }
 
 exports.get_money_account = function(request, response){
-	var user_id = request.query.user_id;
+	let user_id = null;
 
-	if(!request.session.is_admin){
+	if(request.session.is_admin && request.query.user_id !== undefined){
+		user_id = request.query.user_id;
+	}else if(request.session.user_id !== undefined){
+		user_id = request.session.user_id;
+	}else{
 		response.fail();
 		return;
 	}
