@@ -8,6 +8,8 @@ exports.password_encode = function(password){
 	return encoded + salt;
 }
 
+let password_encode = exports.password_encode;
+
 exports.login = function(request, response){
 	var username = request.body.username;
 	var password = password_encode(request.body.password);
