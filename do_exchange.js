@@ -171,6 +171,9 @@ function do_single_exchange(stock_id, connection, callback){
 						});
 				},
 				(error)=>{
+					console.log("DONE");
+					console.log(buy_in_list);
+					console.log(sell_out_list);
 					if(error){
 						console.trace();
 						callback(error);
@@ -182,9 +185,11 @@ function do_single_exchange(stock_id, connection, callback){
 		},
 		(buy_in_list, sell_out_list, callback)=>{
 			let full_list = buy_in_list.concat(sell_out_list);
+			console.log(full_list);
 			async.eachSeries(
 				full_list,
 				(stock_item, callback)=>{
+					console.log("Addback:"+JSON.stringify(stock_item));
 					connection.query(
 						`INSERT INTO active_orders
 							(id, user_id, stock_id, direction,
@@ -253,4 +258,5 @@ function do_exchange(){
 	});
 }
 
-setInterval(do_exchange, 100);
+do_exchange();
+//setInterval(do_exchange, 100);
