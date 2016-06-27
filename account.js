@@ -244,7 +244,7 @@ exports.get_money_account = function(request, response){
 }
 
 exports.remove_money_account = function(request, response){
-	var user_id = request.query.user_id;
+	var user_id = request.body.user_id;
 
 	if(!request.session.is_admin){
 		response.fail();
