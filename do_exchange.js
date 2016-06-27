@@ -91,10 +91,6 @@ function do_order(connection, stock_id, buy_in_item, sell_out_item, callback){
 				buy_in_item.user_id, stock_id, make_amout, callback);
 		},
 		(callback)=>{
-			user_stock_add(connection,
-				sell_out_item.user_id, stock_id, -make_amout, callback);
-		},
-		(callback)=>{
 			add_history_order(connection,
 				sell_out_item.user_id, buy_in_item.user_id,
 				stock_id, make_price, make_amout, callback);
@@ -158,7 +154,7 @@ function do_single_exchange(stock_id, connection, callback){
 				()=>{
 					if(buy_in_list.length == 0 || sell_out_list.length == 0)
 						return false;
-					return buy_in_list[0].price > sell_out_list[0].price;
+					return buy_in_list[0].price >= sell_out_list[0].price - 0.000001;
 				},
 				(callback)=>{
 					do_order(connection, stock_id, buy_in_list[0], sell_out_list[0], 
@@ -171,9 +167,6 @@ function do_single_exchange(stock_id, connection, callback){
 						});
 				},
 				(error)=>{
-					console.log("DONE");
-					console.log(buy_in_list);
-					console.log(sell_out_list);
 					if(error){
 						console.trace();
 						callback(error);
@@ -185,7 +178,6 @@ function do_single_exchange(stock_id, connection, callback){
 		},
 		(buy_in_list, sell_out_list, callback)=>{
 			let full_list = buy_in_list.concat(sell_out_list);
-			console.log(full_list);
 			async.eachSeries(
 				full_list,
 				(stock_item, callback)=>{
@@ -258,5 +250,4 @@ function do_exchange(){
 	});
 }
 
-do_exchange();
-//setInterval(do_exchange, 100);
+setInterval(do_exchange, 500);
