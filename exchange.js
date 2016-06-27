@@ -3,6 +3,12 @@ var async = require("async");
 
 exports.get_orders = function(request, response){
 	var user_id = request.session.user_id;
+
+	if(user_id === undefined){
+		response.fail();
+		return;
+	}
+
 	async.waterfall(
 	[
 		function(callback){
@@ -24,6 +30,10 @@ exports.get_orders = function(request, response){
 
 exports.get_stocks = function(request, response){
 	var user_id = request.session.user_id;
+	if(user_id === undefined){
+		response.fail();
+		return;
+	}
 	async.waterfall(
 	[
 		function(callback){
@@ -54,6 +64,11 @@ exports.new_order = function(request, response){
 	var amount = request.body.amount;
 
 	var money = price * amount;
+
+	if(user_id === undefined){
+		response.fail();
+		return;
+	}
 
 	if(buy_in_order == sell_out_order){
 		response.assert();
@@ -146,6 +161,11 @@ exports.new_order = function(request, response){
 exports.remove_order = function(request, response){
 	var user_id = request.session.user_id;
 	var order_id = request.body.order_id;
+
+	if(user_id === undefined){
+		response.fail();
+		return;
+	}
 
 	async.waterfall(
 	[

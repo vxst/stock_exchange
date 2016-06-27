@@ -103,7 +103,7 @@ exports.get_stock_account = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query("SELECT username, name, sex, national_id, address, work, education, phone FROM user WHERE id=?", [target_user_id], function(err, rows){
+			connection.query("SELECT id, username, name, sex, national_id, address, work, education, phone FROM user WHERE id=?", [target_user_id], function(err, rows){
 				connection.release();
 				response.ok_with_data(rows[0]);
 				callback(null);

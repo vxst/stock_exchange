@@ -36,8 +36,8 @@ exports.login = function(request, response){
 }
 
 exports.logout = function(request, response){
-	request.session.user_id = null;
-	request.session.is_admin = null;
+	request.session.user_id = undefined;
+	request.session.is_admin = undefined;
 	response.ok();
 }
 
