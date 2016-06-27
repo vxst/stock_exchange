@@ -314,3 +314,35 @@ exports.remove_money_account = function(request, response){
 		}
 	]);
 }
+
+exports.money_account_password_check=(request, response)=>{
+	if(request.session.user_id === undefined){
+		response.fail();
+		return;
+	}
+
+	let password = request.body.password;
+	let user_id = request.session.user_id;
+
+	async.waterfall([
+		(callback)=>{
+			database.get_connection(callback);
+		},
+		(connection, callback)=>{
+			connection.query(`SELECT password FROM user_money WHERE stock_account_id=?`,
+				[user_id], 
+				(error, result)=>{
+					connection.release();
+					if(error || result.length != 1){
+						response.fail();
+					}else if(user.password_encode(password) != result[0]){
+						response.fail();
+					}else{
+						response.ok();
+					}
+					callback(null);
+				}
+			);
+		}
+	]);
+}

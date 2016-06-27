@@ -59,6 +59,7 @@ app.put('/money_account', account.put_money_account);
 app.post('/money_account', account.put_money_account);
 app.delete('/money_account', account.remove_money_account);
 app.post('/money_account_del', account.remove_money_account);
+app.post('/money_account_password_check', account.money_account_password_check);
 
 app.get('/orders', exchange.get_orders);
 app.post('/order_new', exchange.new_order);
