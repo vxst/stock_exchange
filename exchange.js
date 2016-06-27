@@ -17,11 +17,12 @@ exports.get_orders = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query("SELECT id, stock_id, stock.name as stock_name, direction, price, amount FROM active_orders JOIN stock ON active_orders.stock_id = stock.id WHERE active_orders.user_id = ?", [user_id], function(error, result){
+			connection.query("SELECT active_orders.id as id, stock_id, stock.name as stock_name, direction, price, amount FROM active_orders JOIN stock ON active_orders.stock_id = stock.id WHERE active_orders.user_id = ?", [user_id], function(error, result){
 				connection.release();
-				if(error != null)
+				if(error != null){
+					console.log(error);
 					response.fail();
-				else{
+				}else{
 					response.ok_with_data(result);
 				}
 				callback(null);

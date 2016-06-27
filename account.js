@@ -250,11 +250,14 @@ exports.put_money_account = function(request, response){
 
 exports.get_money_account = function(request, response){
 	let user_id = null;
+	let user_id_type = null;
 
 	if(request.session.is_admin && request.query.user_id !== undefined){
 		user_id = request.query.user_id;
+		user_id_type = 'money';
 	}else if(request.session.user_id !== undefined){
 		user_id = request.session.user_id;
+		user_id_type = 'stock';
 	}else{
 		response.fail();
 		return;
@@ -265,7 +268,11 @@ exports.get_money_account = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query("SELECT stock_account_id, money FROM user_money WHERE id = ?", [user_id], 
+			let query_str = "SELECT stock_account_id, money FROM user_money WHERE id = ?";
+			if(user_id_type == 'stock'){
+				query_str = "SELECT stock_account_id, money FROM user_money WHERE stock_account_id = ?";
+			}
+			connection.query(query_str, [user_id], 
 				function(error, result){
 					connection.release();
 					if(error || result.length != 1){
