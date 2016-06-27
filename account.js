@@ -1,3 +1,5 @@
+"use strict";
+
 var database = require("./db");
 var user = require("./user");
 var async = require("async");
