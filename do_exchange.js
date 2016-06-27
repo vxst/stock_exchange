@@ -122,7 +122,10 @@ function do_single_exchange(stock_id, connection, callback){
 				`SELECT id, user_id, price, amount, direction, order_time
 					FROM active_orders
 					WHERE stock_id=? AND direction=TRUE
-					ORDER BY price DESC, order_time ASC`, [stock_id], callback);
+					ORDER BY price DESC, order_time ASC`, [stock_id], 
+					(error, buy_in_list)=>{
+						callback(error, buy_in_list);
+					});
 		},
 		(buy_in_list, callback)=>{
 			connection.query(
@@ -132,7 +135,7 @@ function do_single_exchange(stock_id, connection, callback){
 					ORDER BY price ASC, order_time ASC`,
 				[stock_id],
 				(error, sell_out_list)=>{
-					callback(null, buy_in_list, sell_out_list);
+					callback(error, buy_in_list, sell_out_list);
 				});
 		},
 		(buy_in_list, sell_out_list, callback)=>{
@@ -178,7 +181,7 @@ function do_single_exchange(stock_id, connection, callback){
 			);
 		},
 		(buy_in_list, sell_out_list, callback)=>{
-			full_list = buy_in_list.concat(sell_out_list);
+			let full_list = buy_in_list.concat(sell_out_list);
 			async.eachSeries(
 				full_list,
 				(stock_item, callback)=>{
