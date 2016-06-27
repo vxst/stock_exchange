@@ -48,6 +48,7 @@ app.post('/user/password_change', user.change_password);
 app.get('/stock_account', account.get_stock_account);
 app.put('/stock_account', account.put_stock_account);
 app.post('/stock_account', account.put_stock_account);
+app.post('/stock_account_user', account.put_stock_account_user);
 app.delete('/stock_account', account.remove_stock_account);
 app.post('/stock_account_del', account.remove_stock_account);
 

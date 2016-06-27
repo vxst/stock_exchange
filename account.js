@@ -2,6 +2,40 @@ var database = require("./db");
 var user = require("./user");
 var async = require("async");
 
+exports.put_stock_account_user = function(request, response){
+	var user_id = request.session.user_id;
+	var sex = request.body.sex;
+	var national_id = request.body.national_id;
+	var address = request.body.address;
+	var education = request.body.education;
+	var work = request.body.work;
+	var phone = request.body.phone;
+
+	if(user_id === undefined){
+		response.fail();
+		return;
+	}
+
+	async.waterfall([
+		(callback)=>{
+			database.get_connection(callback);
+		},
+		(connection, callback)=>{
+			connection.query("UPDATE user SET sex=?, national_id=?, address=?, education=?, work=?, phone=? WHERE user_id=?", [sex, national_id, address, education, work, phone, user_id],
+				(error, result)=>{
+					connection.release();
+					if(error || result.affectedRows != 1){
+						response.fail();
+					}else{
+						response.ok();
+					}
+					callback(null);
+				}
+			);
+		}
+	]);
+}
+
 exports.put_stock_account = function(request, response){
 	var user_id = request.body.user_id;
 	var username = request.body.username;
