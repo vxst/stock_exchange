@@ -2,6 +2,7 @@
 
 var database = require("./db");
 var async = require("async");
+var counter = 1
 
 function user_money_add(connection, user_id, money, callback){
 	if(Math.abs(money) < 0.01){
@@ -242,7 +243,11 @@ function do_exchange(){
 	(error)=>{
 		if(error)
 			console.log(error);
+		else{
+			console.log('done: ' + counter);
+		}
+		counter += 1;
 	});
 }
 
-do_exchange();
+setInterval(do_exchange, 100);
