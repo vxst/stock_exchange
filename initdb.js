@@ -19,6 +19,7 @@ function init_database(){
 							national_id VARCHAR(32),
 							address VARCHAR(255),
 							work VARCHAR(32),
+							work_place VARCHAR(32),
 							education VARCHAR(32),
 							phone VARCHAR(32),
 							is_admin BOOLEAN,

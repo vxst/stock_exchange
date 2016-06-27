@@ -11,6 +11,7 @@ exports.put_stock_account_user = function(request, response){
 	var address = request.body.address;
 	var education = request.body.education;
 	var work = request.body.work;
+	var work_place = request.body.work_place;
 	var phone = request.body.phone;
 
 	if(user_id === undefined){
@@ -23,7 +24,7 @@ exports.put_stock_account_user = function(request, response){
 			database.get_connection(callback);
 		},
 		(connection, callback)=>{
-			connection.query("UPDATE user SET sex=?, national_id=?, address=?, education=?, work=?, phone=? WHERE id=?", [sex, national_id, address, education, work, phone, user_id],
+			connection.query("UPDATE user SET sex=?, national_id=?, address=?, education=?, work=?, phone=?, work_place=? WHERE id=?", [sex, national_id, address, education, work, phone, work_place, user_id],
 				(error, result)=>{
 					connection.release();
 					if(error || result.affectedRows != 1){
@@ -47,6 +48,7 @@ exports.put_stock_account = function(request, response){
 	var national_id = request.body.national_id;
 	var address = request.body.address;
 	var work = request.body.work;
+	var work_place = request.body.work_place;
 	var education = request.body.education;
 	var phone = request.body.phone;
 	var sex = request.body.sex;
@@ -63,10 +65,10 @@ exports.put_stock_account = function(request, response){
 			},
 			function(connection, callback){
 				connection.query(
-					"INSERT INTO user (username, name, password, create_time, national_id, address, work, education, phone, sex, is_admin) VALUES(?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, FALSE)",
+					"INSERT INTO user (username, name, password, create_time, national_id, address, work, education, phone, sex, work_place, is_admin) VALUES(?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, FALSE)",
 					[username, name, password,
 					national_id, address, work,
-					education, phone, sex],
+					education, phone, sex, work_place],
 					function(error, rows){
 						connection.release();
 						if(error === null)
@@ -86,10 +88,10 @@ exports.put_stock_account = function(request, response){
 			function(connection, callback){
 				if(!password_empty){
 					connection.query(
-						"UPDATE user SET `username`=?, `name`=?, `password`=?, `national_id`=?, `address`=?, `work`=?, `education`=?, `phone`=?, `sex`=? WHERE `id`=?",
+						"UPDATE user SET `username`=?, `name`=?, `password`=?, `national_id`=?, `address`=?, `work`=?, `education`=?, `phone`=?, `sex`=?, `work_place`=? WHERE `id`=?",
 						[username, name, password,
 						national_id, address, work,
-						education, phone, sex,
+						education, phone, sex, work_place,
 						user_id],
 						function(error, rows){
 							connection.release();
@@ -102,10 +104,10 @@ exports.put_stock_account = function(request, response){
 					);
 				}else{
 					connection.query(
-						"UPDATE user SET `username`=?, `name`=?, `national_id`=?, `address`=?, `work`=?, `education`=?, `phone`=?, `sex`=? WHERE `id`=?",
+						"UPDATE user SET `username`=?, `name`=?, `national_id`=?, `address`=?, `work`=?, `education`=?, `phone`=?, `sex`=?, work_place=? WHERE `id`=?",
 						[username, name, 
 						national_id, address, work,
-						education, phone, sex,
+						education, phone, sex, work_place,
 						user_id],
 						function(error, rows){
 							connection.release();
@@ -139,7 +141,7 @@ exports.get_stock_account = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query("SELECT id, username, name, sex, national_id, address, work, education, phone FROM user WHERE id=?", [target_user_id], function(err, rows){
+			connection.query("SELECT id, username, name, sex, national_id, address, work, education, phone, work_place FROM user WHERE id=?", [target_user_id], function(err, rows){
 				connection.release();
 				response.ok_with_data(rows[0]);
 				callback(null);
