@@ -23,7 +23,7 @@ exports.put_stock_account_user = function(request, response){
 			database.get_connection(callback);
 		},
 		(connection, callback)=>{
-			connection.query("UPDATE user SET sex=?, national_id=?, address=?, education=?, work=?, phone=? WHERE user_id=?", [sex, national_id, address, education, work, phone, user_id],
+			connection.query("UPDATE user SET sex=?, national_id=?, address=?, education=?, work=?, phone=? WHERE id=?", [sex, national_id, address, education, work, phone, user_id],
 				(error, result)=>{
 					connection.release();
 					if(error || result.affectedRows != 1){
@@ -56,14 +56,14 @@ exports.put_stock_account = function(request, response){
 		return;
 	}
 	
-	if(user_id === null){
+	if(user_id == ""){
 		async.waterfall([
 		    function(callback){
 				database.get_connection(callback);
 			},
 			function(connection, callback){
 				connection.query(
-					"INSERT INTO user (username, name, password, create_time, national_id, address, work, education, phone, sex) VALUES(?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?)",
+					"INSERT INTO user (username, name, password, create_time, national_id, address, work, education, phone, sex, is_admin) VALUES(?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, FALSE)",
 					[username, name, password,
 					national_id, address, work,
 					education, phone, sex],
@@ -93,7 +93,7 @@ exports.put_stock_account = function(request, response){
 						user_id],
 						function(error, rows){
 							connection.release();
-							if(error === null)
+							if(error === null && rows.affectedRows == 1)
 								response.ok();
 							else
 								response.fail();
@@ -179,15 +179,14 @@ exports.remove_stock_account = function(request, response){
 exports.put_money_account = function(request, response){
 	var user_id = request.body.user_id;
 	var stock_account_id = request.body.stock_account_id;
-	var password = password_encode(request.body.password);
+	var password = user.password_encode(request.body.password);
 	var money = request.body.money;
 
 	if(!request.session.is_admin){
 		response.fail();
 		return;
 	}
-
-	if(user_id === null){
+	if(user_id === ""){
 		async.waterfall([
 			function(callback){
 				database.get_connection(callback);
@@ -270,7 +269,7 @@ exports.get_money_account = function(request, response){
 					if(error || result.length != 1){
 						response.fail();
 					}else{
-						response.ok();
+						response.ok_with_data(result[0]);
 					}
 					callback(null);
 				}

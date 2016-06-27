@@ -25,7 +25,7 @@ exports.login = function(request, response){
 					if(result.length == 1){
 						request.session.user_id = result[0]['id'];
 						request.session.is_admin = result[0]['is_admin'];
-						response.ok();
+						response.ok_with_data({'is_admin':request.session.is_admin});
 					}else{
 						response.fail();
 					}
