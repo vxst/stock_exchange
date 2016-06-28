@@ -8,6 +8,7 @@ var pool = mysql.createPool({
 	password : 'xvAmM5r75yUEqdYT',
 	database : 'stock_exchange',
 	charset  : 'utf8_bin',
+	connectionLimit: 64
 });
 
 

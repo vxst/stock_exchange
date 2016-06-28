@@ -98,8 +98,10 @@ exports.new_order = function(request, response){
 						callback("No such active stock");
 						return;
 					}
-					var max_price = result[0].base_price * (1.0+max_change);
-					var min_price = result[0].base_price * (1.0-max_change);
+					let base_price = result[0].base_price;
+					let max_change = result[0].max_change;
+					let max_price = base_price * (1.0+max_change);
+					let min_price = base_price * (1.0-max_change);
 					if(price > max_price || price < min_price){
 						connection.release();
 						callback("Price over range");
@@ -192,9 +194,9 @@ exports.remove_order = function(request, response){
 				callback(error, connection, result[0].stock_id, result[0].price, result[0].amount, result[0].direction);
 			});
 		},
-		function(connection, stock_id, price, amount, direction){
-			var buy_in_order = direction === true;
-			var sell_out_order = direction === false;
+		function(connection, stock_id, price, amount, direction, callback){
+			var buy_in_order = direction == true;
+			var sell_out_order = direction == false;
 			if(buy_in_order == sell_out_order){
 				response.assert();
 				return;
@@ -220,15 +222,15 @@ exports.remove_order = function(request, response){
 				});
 			}
 		},
-		function(connection, stock_id, price, amount, direction, data){
-			var buy_in_order = direction === true;
-			var sell_out_order = direction === false;
+		function(connection, stock_id, price, amount, direction, data, callback){
+			var buy_in_order = direction == true;
+			var sell_out_order = direction == false;
 			if(buy_in_order == sell_out_order){
 				response.assert();
 				return;
 			}
 			if(buy_in_order){
-				connection.query("UPDATE user_money SET money = ? WHERE stock_account_id = ?", [data + amount * price], function(error, result){
+				connection.query("UPDATE user_money SET money = ? WHERE stock_account_id = ?", [data + amount * price, user_id], function(error, result){
 					if(error || result.affectedRows < 1){
 						response.assert();
 						return;

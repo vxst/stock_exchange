@@ -4,7 +4,7 @@ var database = require("./db");
 var async = require("async");
 
 exports.add_stock = function(request, response){
-	if(request.session.is_admin !== true){
+	if(request.session.is_admin != true){
 		response.fail();
 		return;
 	}
@@ -33,11 +33,12 @@ exports.add_stock = function(request, response){
 }
 
 exports.edit_stock = function(request, response){
-	if(request.session.is_admin !== true){
+	if(request.session.is_admin != true){
 		response.fail();
 		return;
 	}
 	var stock_id = request.body.stock_id;
+	var name = request.body.name;
 	var max_change = request.body.max_change;
 
 	async.waterfall([
@@ -45,10 +46,12 @@ exports.edit_stock = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query("UPDATE stock SET next_max_change=? WHERE id=?", [max_change, stock_id],
+			connection.query("UPDATE stock SET name=?, next_max_change=? WHERE id=?", [name, max_change, stock_id],
 				function(error, result){
 					connection.release();
 					if(error || result.affectedRows != 1){
+						if(error)
+							console.log(error);
 						response.fail();
 					}else{
 						response.ok();
@@ -60,7 +63,7 @@ exports.edit_stock = function(request, response){
 }
 
 exports.turn_stock = function(request, response){
-	if(request.session.is_admin !== true){
+	if(request.session.is_admin != true){
 		response.fail();
 		return;
 	}

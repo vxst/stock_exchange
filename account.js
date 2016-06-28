@@ -335,7 +335,7 @@ exports.money_account_password_check=(request, response)=>{
 					connection.release();
 					if(error || result.length != 1){
 						response.fail();
-					}else if(user.password_encode(password) != result[0]){
+					}else if(user.password_encode(password) != result[0].password){
 						response.fail();
 					}else{
 						response.ok();
