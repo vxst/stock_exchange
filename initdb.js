@@ -115,6 +115,14 @@ function init_database(){
 						)`, callback);
 				},
 				function(callback){
+					connection.query(`CREATE FUNCTION  current_price_for_stock (sid INT)
+										RETURNS DOUBLE NOT DETERMINISTIC READS SQL DATA SQL SECURITY DEFINER RETURN 
+										(
+											SELECT price FROM history_orders WHERE stock_id = sid
+											ORDER BY complete_time DESC  LIMIT 0 , 1
+										)`, callback);
+				},
+				function(callback){
 					connection.release();
 					callback(null);
 				}

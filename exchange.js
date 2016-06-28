@@ -43,14 +43,12 @@ exports.get_stocks = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query(`SELECT stock_holding.stock_id AS stock_id, stock.name AS stock_name,
-				stock_holding.amount as amount, buyin_price, history_orders.price AS current_price 
-				FROM stock_holding
-				JOIN stock ON stock.id = stock_holding.stock_id
-				JOIN history_orders ON history_orders.stock_id = stock_holding.stock_id
-				WHERE user_id = ? AND complete_time = 
-				(SELECT MAX(complete_time) FROM history_orders JOIN stock_holding ON stock_holding.stock_id = history_orders.stock_id WHERE user_id = ?)`,
-				[user_id, user_id],
+			connection.query(
+					`SELECT stock_id, stock.name AS stock_name, amount, buyin_price, current_price_for_stock(stock_id) as current_price
+					FROM stock_holding
+					JOIN stock ON stock.id = stock_holding.stock_id
+					WHERE user_id = ?`,
+				[user_id],
 				function(error, result){
 					connection.release();
 					if(error)
