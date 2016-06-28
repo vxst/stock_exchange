@@ -72,7 +72,7 @@ exports.stock_history = function(request, response){
 			database.get_connection(callback);
 		},
 		function(connection, callback){
-			connection.query("SELECT complete_time, amount FROM history_orders WHERE stock_id = ?",
+			connection.query("SELECT complete_time AS time, price FROM history_orders WHERE stock_id = ? ORDER BY complete_time ASC",
 				[stock_id],
 				function(error, results){
 					connection.release();
