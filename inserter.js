@@ -31,7 +31,7 @@ async.waterfall([
 		let stock_id = 1;
 		async.whilst(
 			()=>{
-				return stock_id < 10000;
+				return stock_id < 1000;
 			},
 			(callback)=>{
 				let current_date = new Date(2015, 0, 1);
@@ -75,13 +75,13 @@ async.waterfall([
 						let active_count = 0;
 						async.whilst(
 							()=>{
-								return active_count < 50;
+								return active_count < 15;
 							},
 							(callback)=>{
 								let change = getNumberInNormalDistribution(1.0, 0.015);
 								let price = current_value * change;
 								let direction = (price < current_value);
-								let amount = parseInt(Math.random()*15) * 100;
+								let amount = parseInt(Math.random()*10) * 100 + 100;
 								connection.query("INSERT INTO active_orders (user_id, stock_id, direction, price, amount) VALUES(3, ?, ?, ?, ?)", 
 									[stock_id, direction, price, amount],
 									(error, result)=>{

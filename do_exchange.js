@@ -46,7 +46,7 @@ function user_stock_add(connection, user_id, stock_id, amount, price, callback){
 					`INSERT INTO stock_holding
 						(user_id, stock_id, amount, buyin_price)
 						VALUES(?, ?, ?, ?)`,
-					[user_id, stock_id, amount],
+					[user_id, stock_id, amount, price],
 					(error, result)=>{
 						callback(error);
 					}
@@ -77,6 +77,7 @@ function do_order(connection, stock_id, buy_in_item, sell_out_item, callback){
 	let make_price = (buy_in_item.price + sell_out_item.price) / 2.0;
 	let make_amout = Math.min(buy_in_item.amount, sell_out_item.amount);
 	let buyer_discount = (buy_in_item.price - make_price) * make_amout;
+	console.log("Order User:"+ buy_in_item.user_id +" Amount:" + make_amout);
 	async.waterfall([
 		(callback)=>{
 			user_money_add(connection,
@@ -107,14 +108,6 @@ function do_single_exchange(stock_id, connection, callback){
 	async.waterfall([
 		(callback)=>{
 			connection.query(
-				`LOCK TABLE active_orders WRITE`,
-				(error, result)=>{
-					callback(error);
-				}
-			);
-		},
-		(callback)=>{
-			connection.query(
 				`SELECT id, user_id, price, amount, direction, order_time
 					FROM active_orders
 					WHERE stock_id=? AND direction=TRUE
@@ -135,19 +128,15 @@ function do_single_exchange(stock_id, connection, callback){
 				});
 		},
 		(buy_in_list, sell_out_list, callback)=>{
-			connection.query(
-				`DELETE FROM active_orders WHERE stock_id=?`,
-				[stock_id],
-				(error, result)=>{
-					callback(error, buy_in_list, sell_out_list);
-				});
-		},
-		(buy_in_list, sell_out_list, callback)=>{
-			connection.query(
-				`UNLOCK TABLES`,
-				(error, result)=>{
-					callback(error, buy_in_list, sell_out_list);
-				});
+			if(buy_in_list[0].price >= sell_out_list[0].price)
+				connection.query(
+					`DELETE FROM active_orders WHERE stock_id=?`,
+					[stock_id],
+					(error, result)=>{
+						callback(error, buy_in_list, sell_out_list);
+					});
+			else
+				callback('ignore');
 		},
 		(buy_in_list, sell_out_list, callback)=>{
 			async.whilst(
@@ -181,7 +170,7 @@ function do_single_exchange(stock_id, connection, callback){
 			async.eachSeries(
 				full_list,
 				(stock_item, callback)=>{
-					console.log("Addback:"+JSON.stringify(stock_item));
+//					console.log("Addback:"+JSON.stringify(stock_item));
 					connection.query(
 						`INSERT INTO active_orders
 							(id, user_id, stock_id, direction,
@@ -202,6 +191,10 @@ function do_single_exchange(stock_id, connection, callback){
 		}
 	],
 	(error)=>{
+		if(error == 'ignore'){
+			callback(null);
+			return;
+		}
 		if(error){
 			console.log("Single ERROR" + error);
 		}
@@ -209,7 +202,13 @@ function do_single_exchange(stock_id, connection, callback){
 	});
 }
 
+let in_func = false;
 function do_exchange(){
+	if(in_func){
+		return;
+	}
+	console.log("start: "+ counter);
+	in_func = true;
 	async.waterfall([
 		(callback)=>{
 			database.get_connection(callback);
@@ -247,7 +246,8 @@ function do_exchange(){
 			console.log('done: ' + counter);
 		}
 		counter += 1;
+		in_func = false;
 	});
 }
 
-setInterval(do_exchange, 500);
+setInterval(do_exchange, 1000);
