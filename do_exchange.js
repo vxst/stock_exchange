@@ -34,9 +34,9 @@ function user_stock_add(connection, user_id, stock_id, amount, price, callback){
 			if(current_count == 1){
 				connection.query(
 					`UPDATE stock_holding
-						SET amount = amount+?, buyin_price = (buyin_price * amount + ? * ?) / (? + amount)
+						SET buyin_price = (buyin_price * amount + ? * ?) / (? + amount), amount = amount + ?
 						WHERE stock_id = ? AND user_id=?`,
-					[amount, price, amount, amount, stock_id, user_id],
+					[price, amount, amount, amount, stock_id, user_id],
 					(error, result)=>{
 						callback(error);
 					}
