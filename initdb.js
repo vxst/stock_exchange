@@ -103,6 +103,7 @@ function init_database(){
 							user_id INT,
 							stock_id INT,
 							amount INT,
+							buyin_price DOUBLE,
 							INDEX(user_id),
 							INDEX(stock_id),
 							FOREIGN KEY(user_id)

@@ -18,7 +18,7 @@ function user_money_add(connection, user_id, money, callback){
 	);
 }
 
-function user_stock_add(connection, user_id, stock_id, amount, callback){
+function user_stock_add(connection, user_id, stock_id, amount, price, callback){
 	async.waterfall([
 		(callback)=>{
 			connection.query(
@@ -34,9 +34,9 @@ function user_stock_add(connection, user_id, stock_id, amount, callback){
 			if(current_count == 1){
 				connection.query(
 					`UPDATE stock_holding
-						SET amount = amount+?
+						SET amount = amount+?, buyin_price = (buyin_price * amount + ? * ?) / (? + amount)
 						WHERE stock_id = ? AND user_id=?`,
-					[amount, stock_id, user_id],
+					[amount, price, amount, amount, stock_id, user_id],
 					(error, result)=>{
 						callback(error);
 					}
@@ -44,8 +44,8 @@ function user_stock_add(connection, user_id, stock_id, amount, callback){
 			}else if(current_count == 0){
 				connection.query(
 					`INSERT INTO stock_holding
-						(user_id, stock_id, amount)
-						VALUES(?, ?, ?)`,
+						(user_id, stock_id, amount, buyin_price)
+						VALUES(?, ?, ?, ?)`,
 					[user_id, stock_id, amount],
 					(error, result)=>{
 						callback(error);
@@ -88,7 +88,7 @@ function do_order(connection, stock_id, buy_in_item, sell_out_item, callback){
 		},
 		(callback)=>{
 			user_stock_add(connection,
-				buy_in_item.user_id, stock_id, make_amout, callback);
+				buy_in_item.user_id, stock_id, make_amout, make_price, callback);
 		},
 		(callback)=>{
 			add_history_order(connection,
