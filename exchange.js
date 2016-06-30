@@ -141,6 +141,8 @@ exports.new_order = function(request, response){
 			if(sell_out_order){
 				connection.query("UPDATE stock_holding SET amount = ? WHERE user_id = ?", [data - amount, user_id], function(error, result){
 					if(error || result.affectedRows != 1){
+						console.log(error);
+						console.log(result);
 						response.assert();
 						return;
 					}

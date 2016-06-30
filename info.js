@@ -45,9 +45,10 @@ exports.stock_info = function(request, response){
 		},
 		function(connection, base_info, callback){
 			connection.query(
-				`(SELECT direction, amount, price FROM active_orders WHERE stock_id = ? AND direction = FALSE ORDER BY price DESC LIMIT 6)
+				`(SELECT direction, amount, price FROM active_orders WHERE stock_id = ? AND direction = FALSE ORDER BY price ASC LIMIT 6)
 				UNION ALL
-				 (SELECT direction, amount, price FROM active_orders WHERE stock_id = ? AND direction = TRUE ORDER BY price DESC LIMIT 6)`,
+				 (SELECT direction, amount, price FROM active_orders WHERE stock_id = ? AND direction = TRUE ORDER BY price DESC LIMIT 6)
+				 ORDER BY price DESC`,
 				 [stock_id, stock_id],
 				 function(error, results){
 					 connection.release();

@@ -250,4 +250,4 @@ function do_exchange(){
 	});
 }
 
-setInterval(do_exchange, 1000);
+setInterval(do_exchange, 750);
